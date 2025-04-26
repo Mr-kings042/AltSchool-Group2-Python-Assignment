@@ -2,7 +2,7 @@
 
 _A FastAPI backend for students and teachers to manage assignments._
 
-## **⚠️ Current Limitations**
+## ** Current Limitations **
 
 _Note: During initial development, the system uses temporary mock data. The database integration is in progress and will be added in a future update._
 
@@ -40,10 +40,15 @@ _(Currently using mock data)_
 ### Installation
 
 1. Clone the repo:
+
    ```bash
    git clone https://github.com/Mr-kings042/AltSchool-Group2-Python-Assignment.git
    ```
-2. Navigate to the project:
-   ```bash
+
    cd AltSchool-Group2-Python-Assignment
-   ```
+
+2. Install dependencies
+   pip install -r requirements.txt
+
+3. Run development server
+   uvicorn main:app --reload
