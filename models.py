@@ -11,10 +11,11 @@ class Teacher(BaseModel):
     name: str
     email: str
 
-class Assignment (BaseModel):
+class Assignment(BaseModel):
     id: int
     student_name: str
     subject: str
     description: str
     filename: str
     comments: List[str] = []
+
