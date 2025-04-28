@@ -50,5 +50,5 @@ _(Currently using mock data)_
 2. Install dependencies
    pip install -r requirements.txt
 
-3. Run development server
+3. Run the server
    uvicorn main:app --reload
