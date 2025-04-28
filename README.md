@@ -2,10 +2,6 @@
 
 _A FastAPI backend for students and teachers to manage assignments._
 
-## ** Current Limitations **
-
-_Note: During initial development, the system uses temporary mock data. The database integration is in progress and will be added in a future update._
-
 ## ** Team **
 
 | Name            | ID               | Role          |
@@ -22,8 +18,6 @@ _Note: During initial development, the system uses temporary mock data. The data
 | Dorothy Ibia    | ALT/SOE/024/5047 |               |
 
 ## ** Features**
-
-_(Currently using mock data)_
 
 - Student registration
 - Assignment submission with file uploads
