@@ -6,6 +6,7 @@ class Student(BaseModel):
     name: str
     email: str
 
+
 class Teacher(BaseModel):
     name: str
     email: str
