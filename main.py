@@ -13,6 +13,19 @@ assignment_counter = 1
 def home():
     return {"message": "Welcome to the Assignment API"}
 
+#Implement Student Registration endpoint
+@app.post("/register-student")
+def register_student(student: Student):
+    #Check if a student is already registered
+    if student.email in student_db:
+        raise HTTPException(status_code=400, detail="Student is already registered")
+
+    student_db[student.email] = {
+        "name": student.name,
+        "email": student.email,
+    }
+    return {"msg": "Student registered successfully"}
+
 
 # @app.post("/assignments/{assignment_id}/comment", status_code=status.HTTP_201_CREATED)
 # def add_comment(
@@ -23,13 +36,13 @@ def home():
 #     if assignment_id not in assignments_comments:
 #        assignments_comments[assignment_id] = []
 
-      assignments_comments[assignment_id].append({
-         "teacher_name": teacher_name,
-         "comment" : comment
-      }) 
-      return{
-         "message": "Comment added successfully"
-      }
+    #   assignments_comments[assignment_id].append({
+    #      "teacher_name": teacher_name,
+    #      "comment" : comment
+    #   }) 
+    #   return{
+    #      "message": "Comment added successfully"
+    #   }
    
 @app.post("/teachers", status_code = 201)
 def register_teacher(body: Teacher):
