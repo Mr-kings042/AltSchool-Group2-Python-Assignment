@@ -2,36 +2,27 @@ from fastapi import FastAPI, status, HTTPException, UploadFile, Form
 from uuid import UUID
 from typing import Annotated
 from models import Student, Teacher, Assignment
-from database import student_db, teacher_db, assignment_db
+from database import student_db, teacher_db, assignment_db, assignment_counter
 
 app = FastAPI()
-# assignments_comments = {}
-assignment_counter = 1
 
 
 @app.get("/")
 def home():
-    return {"message": "Welcome to the Assignment API"}
+    return {"message": "Welcome to the Assignment Submission System API"}
 
+#Implement Student Registration endpoint
+@app.post("/student",status_code = status.HTTP_201_CREATED )
+def register_student(student: Student):
+    #Check if a student is already registered
+    if student.email in student_db:
+        raise HTTPException(status_code=400, detail="Student is already registered")
 
-# @app.post("/assignments/{assignment_id}/comment", status_code=status.HTTP_201_CREATED)
-# def add_comment(
-#     assignment_id: int,
-#     teacher_name: str = Form(...),
-#     comment: str = Form(...)
-#  ):
-#     if assignment_id not in assignments_comments:
-#        assignments_comments[assignment_id] = []
+    student_db[student.name] = Student
+    return {"message": "Student registered successfully"}
 
-      assignments_comments[assignment_id].append({
-         "teacher_name": teacher_name,
-         "comment" : comment
-      }) 
-      return{
-         "message": "Comment added successfully"
-      }
-   
-@app.post("/teachers", status_code = 201)
+#Implement Teachers Registration endpoint
+@app.post("/teachers", status_code=status.HTTP_201_CREATED)
 def register_teacher(body: Teacher):
     email = body.email
     name = body.name
@@ -39,21 +30,13 @@ def register_teacher(body: Teacher):
     if email in teacher_db:
        raise HTTPException(status_code=409, detail={"message": "email already exist"})
     teacher = {"name": name, "email": email}
-    teacher_db[email] = teacher
+    teacher_db[name] = Teacher
     print(teacher)
     return {"message": "Teacher registered successful", "data": teacher}
 
-
-@app.get("/teachers")
-def get_teachers():
-    teachers = list(teacher_db.values())
-    print(teachers)
-    return {"message": "Teachers retrieved successful", "data": teachers}
-
-
-# Submit an assignment
-@app.post("/assignments/")
-async def submit_assignment(
+# submit assignment
+@app.post("/assignments/", status_code=status.HTTP_201_CREATED)
+def submit_assignment(
     student_name: Annotated[str, Form()],
     subject: Annotated[str, Form()],
     description: Annotated[str, Form()],
@@ -62,6 +45,7 @@ async def submit_assignment(
     if student_name not in student_db:
         raise HTTPException(status_code=404, detail="Student not found")
     global assignment_counter
+
     assignment = Assignment(
         id=assignment_counter,
         student_name=student_name,
@@ -72,4 +56,67 @@ async def submit_assignment(
     )
     assignment_db[assignment_counter] = assignment
     assignment_counter += 1
+   
     return {"message": "Assignment submitted successfully", "assignment": assignment.dict()}
+
+# list all teachers
+@app.get("/teachers", status_code=status.HTTP_200_OK)
+def get_teachers():
+    teachers = list(teacher_db.values())
+    print(teachers)
+    return {"message": "Teachers retrieved successful", "data": teachers}
+
+
+# list all assignment
+@app.get("/assignments/", status_code=status.HTTP_200_OK)
+def list_assignments():
+    assignment = list(assignment_db.values())
+    print(assignment)
+    return {"message": "Teachers retrieved successful", "data": assignment}
+
+
+
+# View assignments by student name
+@app.get("/students/{name}/assignments/", status_code=status.HTTP_200_OK)
+def get_student_assignments(name: str):
+    if name not in student_db:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Student not found"
+        )
+    
+    student_assignments = [
+    assignment for assignment in assignment_db.values() 
+        if assignment["student_name"] == name
+    ]
+    return student_assignments
+
+
+
+
+
+@app.post("/assignments/{assignment_id}/comment", status_code=status.HTTP_201_CREATED)
+def add_comment(assignment_id: int, 
+                teacher_name: Annotated[str, Form()],
+                comment: Annotated[str, Form()]):
+    if teacher_name not in teacher_db:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Teacher not registered")
+     
+    assignment = assignment_db.get(assignment_id)
+
+    if not assignment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Assignment not found")
+    Comment = f"{teacher_name}:{comment}"
+    assignment_db[assignment_id].comments.append(Comment)
+    return {"message": "Comment added successfully", "details": Comment}
+
+
+
+
+
+
+
+

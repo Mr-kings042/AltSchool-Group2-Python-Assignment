@@ -46,6 +46,7 @@ _A FastAPI backend for students and teachers to manage assignments._
    http://localhost:8000/docs
    ```
 
+
 ## **API Endpoints**
 
 | Endpoint                               | Method | Parameters                                                                         | Description                              |
@@ -124,3 +125,6 @@ _A FastAPI backend for students and teachers to manage assignments._
 | Harry Ngere     | ALT/SOE/024/5279 | Get student assignments by name |
 | Fatimah Olaitan | ALT/SOE/024/2903 | Documentation                   |
 | Dorothy Ibia    | ALT/SOE/024/5047 | Student registration            |
+
+
+
