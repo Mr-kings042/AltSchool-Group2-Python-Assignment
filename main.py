@@ -82,7 +82,7 @@ async def submit_assignment(
     )
 async def StudentAssignment(student_name:str):
     if student_name not in student_db:
-        raise HTTPException(status_code=404. detail="Student not found.")
+        raise HTTPException(status_code=404, detail="Student not found.")
     
     student_assignment = [
         assignment for assignment in assignment_db.values()
