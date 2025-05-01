@@ -75,7 +75,7 @@ async def submit_assignment(
     return {"message": "Assignment submitted successfully", "assignment": assignment.dict()}
 
 
-# get specific student assignment
+# get specific student assignment by student name
 @app.get(
     "/students/{name}/assignments/",
     response_model= List[Assignment]
