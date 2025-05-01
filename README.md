@@ -56,7 +56,7 @@ _A FastAPI backend for students and teachers to manage assignments._
 | `/assignments/`                        | POST   | `student_name` (Form)<br>`subject` (Form)<br>`description` (Form)<br>`file` (File) | Submit a new assignment with file upload |
 | `/students/{name}/assignments/`        | GET    | `name` (Path)                                                                      | View assignments for a specific student  |
 | `/assignments/{assignment_id}/comment` | POST   | `teacher_name` (Form)<br>`comment` (Form)                                          | Add teacher comment to assignment        |
-
+| `/assignments/`                        | GET    | -                                                                                  | List all submitted assignments           |
 ## **Example Responses**
 
 ### Successful Teacher Registration (201)
@@ -117,7 +117,7 @@ _A FastAPI backend for students and teachers to manage assignments._
 | --------------- | ---------------- | ------------------------------- |
 | Mercy Anih      | ALT/SOE/024/5525 | Create student API              |
 | Alaka Jubril    | ALT/SOE/024/2748 | Teachers registration           |
-| Israel Imonitie | ALT/SOE/024/2718 |                                 |
+| Israel Imonitie | ALT/SOE/024/2718 | Documentation                   |
 | Anataku Aaliyah | ALT/SOE/024/4624 | Create comments on assignments  |
 | Johnson Kayode  | ALT/SOE/024/5396 | Create student API              |
 | Chibueze Okoh   | ALT/SOE/024/4890 | Create comments on assignments  |
