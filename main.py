@@ -1,6 +1,6 @@
 from fastapi import FastAPI, status, HTTPException, UploadFile, Form
 from uuid import UUID
-from typing import Annotated
+from typing import Annotated, List
 from models import Student, Teacher, Assignment
 from database import student_db, teacher_db, assignment_db
 
@@ -73,3 +73,20 @@ async def submit_assignment(
     assignment_db[assignment_counter] = assignment
     assignment_counter += 1
     return {"message": "Assignment submitted successfully", "assignment": assignment.dict()}
+
+
+# get specific student assignment
+@app.get(
+    "/students/{name}/assignments/",
+    response_model= List[Assignment]
+    )
+async def StudentAssignment(student_name:str):
+    if student_name not in student_db:
+        raise HTTPException(status_code=404. detail="Student not found.")
+    
+    student_assignment = [
+        assignment for assignment in assignment_db.values()
+        if assignment["student_name"] == student_name 
+    ]
+    
+    return student_assignment
