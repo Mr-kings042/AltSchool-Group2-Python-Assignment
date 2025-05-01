@@ -59,24 +59,6 @@ def submit_assignment(
    
     return {"message": "Assignment submitted successfully", "assignment": assignment.dict()}
 
-<<<<<<< HEAD
-
-# get specific student assignment by student name
-@app.get(
-    "/students/{name}/assignments/",
-    response_model= List[Assignment]
-    )
-async def StudentAssignment(student_name:str):
-    if student_name not in student_db:
-        raise HTTPException(status_code=404, detail="Student not found.")
-    
-    student_assignment = [
-        assignment for assignment in assignment_db.values()
-        if assignment["student_name"] == student_name 
-    ]
-    
-    return student_assignment
-=======
 # list all teachers
 @app.get("/teachers", status_code=status.HTTP_200_OK)
 def get_teachers():
@@ -110,9 +92,6 @@ def get_student_assignments(name: str):
     return student_assignments
 
 
-
-
-
 @app.post("/assignments/{assignment_id}/comment", status_code=status.HTTP_201_CREATED)
 def add_comment(assignment_id: int, 
                 teacher_name: Annotated[str, Form()],
@@ -138,4 +117,3 @@ def add_comment(assignment_id: int,
 
 
 
->>>>>>> main
