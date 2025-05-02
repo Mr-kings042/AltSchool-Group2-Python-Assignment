@@ -1,5 +1,4 @@
 from fastapi import FastAPI, status, HTTPException, UploadFile, Form
-
 from typing import Annotated
 from models import Student, Teacher, Assignment
 from database import student_db, teacher_db, assignment_db, assignment_counter
