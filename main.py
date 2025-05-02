@@ -1,5 +1,5 @@
 from fastapi import FastAPI, status, HTTPException, UploadFile, Form
-from uuid import UUID
+
 from typing import Annotated
 from models import Student, Teacher, Assignment
 from database import student_db, teacher_db, assignment_db, assignment_counter
@@ -18,8 +18,8 @@ def register_student(student: Student):
     if student.email in student_db:
         raise HTTPException(status_code=400, detail="Student is already registered")
 
-    student_db[student.name] = Student
-    return {"message": "Student registered successfully"}
+    student_db[student.email] = student
+    return {"message": "Student registered successfully", "detail": student}
 
 #Implement Teachers Registration endpoint
 @app.post("/teachers", status_code=status.HTTP_201_CREATED)
@@ -30,7 +30,7 @@ def register_teacher(body: Teacher):
     if email in teacher_db:
        raise HTTPException(status_code=409, detail={"message": "email already exist"})
     teacher = {"name": name, "email": email}
-    teacher_db[name] = Teacher
+    teacher_db[email] = body
     print(teacher)
     return {"message": "Teacher registered successful", "data": teacher}
 
@@ -56,7 +56,7 @@ def submit_assignment(
     )
     assignment_db[assignment_counter] = assignment
     assignment_counter += 1
-   
+
     return {"message": "Assignment submitted successfully", "assignment": assignment.dict()}
 
 # list all teachers
@@ -64,7 +64,7 @@ def submit_assignment(
 def get_teachers():
     teachers = list(teacher_db.values())
     print(teachers)
-    return {"message": "Teachers retrieved successful", "data": teachers}
+    return teachers
 
 
 # list all assignment
@@ -72,13 +72,13 @@ def get_teachers():
 def list_assignments():
     assignment = list(assignment_db.values())
     print(assignment)
-    return {"message": "Teachers retrieved successful", "data": assignment}
+    return assignment
 
 
 
 # View assignments by student name
 @app.get("/students/{name}/assignments/", status_code=status.HTTP_200_OK)
-def get_student_assignments(name: str):
+def student_assignments(name: str):
     if name not in student_db:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -87,8 +87,10 @@ def get_student_assignments(name: str):
     
     student_assignments = [
     assignment for assignment in assignment_db.values() 
-        if assignment["student_name"] == name
+        if assignment.student_name == name
     ]
+    if not student_assignments:
+          return {"message": "No assignments found for this student"}
     return student_assignments
 
 
@@ -109,7 +111,7 @@ def add_comment(assignment_id: int,
     if not assignment:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Assignment not found")
-    Comment = f"{teacher_name}:{comment}"
+    Comment = f"Teacher_name:{teacher_name},:{comment}"
     assignment_db[assignment_id].comments.append(Comment)
     return {"message": "Comment added successfully", "details": Comment}
 
